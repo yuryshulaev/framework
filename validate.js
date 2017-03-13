@@ -1,6 +1,6 @@
 'use strict'
 
-function validate(schema, value, key) {
+function validate(schema, value, path = []) {
     if (typeof schema === 'object') {
         if (typeof value !== 'object' ) {
             throw new ValidationError('Expected an object');
@@ -11,10 +11,10 @@ function validate(schema, value, key) {
                 throw new ValidationError('Expected an array');
             }
 
-            return schema.map((itemSchema, i) => validate(itemSchema, value[i], key && key[i]));
+            return schema.map((itemSchema, i) => validate(itemSchema, value[i], path.concat(i)));
         } else {
             return Object.keys(schema).reduce((acc, key) => {
-                acc[key] = validate(schema[key], value[key], key);
+                acc[key] = validate(schema[key], value[key], path.concat(key));
                 return acc;
             }, {});
         }
@@ -24,13 +24,21 @@ function validate(schema, value, key) {
         } catch (err) {
             if (err instanceof ValidationError) {
                 err.rule = schema.name;
-                err.key = key;
+                err.path = path;
             }
 
             throw err;
         }
     } else {
         throw new Error('Invalid schema');
+    }
+}
+
+class ValidationError extends Error {
+    constructor(message, rule, path) {
+        super(message);
+        this.rule = rule;
+        this.path = path;
     }
 }
 
@@ -80,12 +88,4 @@ const v = {
     },
 };
 
-class ValidationError extends Error {
-    constructor(message, rule, key) {
-        super(message);
-        this.rule = rule;
-        this.key = key;
-    }
-}
-
-module.exports = {validate, v, ValidationError};
+module.exports = {validate, ValidationError, v};

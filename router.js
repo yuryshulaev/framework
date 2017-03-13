@@ -2,7 +2,7 @@
 
 const {validate} = require('./validate');
 
-function findRoute(routes, path, middleware = [], params = [], callback, urlNamePrefix = 'url:') {
+function findRoute(routes, path, middleware = [], params = [], callback) {
     const [current, ...rest] = path;
 
     if (typeof routes === 'function') {
@@ -18,7 +18,7 @@ function findRoute(routes, path, middleware = [], params = [], callback, urlName
     const route = current ? routes.children && routes.children[current] : routes.index;
 
     if (route) {
-        return findRoute(route, rest, middleware, params, callback, urlNamePrefix);
+        return findRoute(route, rest, middleware, params, callback);
     }
 
     if (current) {
@@ -32,7 +32,7 @@ function findRoute(routes, path, middleware = [], params = [], callback, urlName
             }
 
             params.push({name, schema, value: current});
-            return findRoute(paramRoute, rest, middleware, params, callback, urlNamePrefix);
+            return findRoute(paramRoute, rest, middleware, params, callback);
         }
     }
 

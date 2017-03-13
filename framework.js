@@ -44,20 +44,20 @@ const handleRequest = routes => async (ctx, next) => {
                 error: {
                     message: err.message,
                     rule: err.rule,
-                    key: err.key,
+                    path: err.path,
                 },
             };
         } else {
-            ctx.body = `Validation error: ${err.message} [${err.key}]`;
+            ctx.body = `Validation error: ${err.message} [${err.path.join('.')}]`;
         }
     }
 };
 
-const validateParams = params => async (ctx, next) => {
+const validateParams = (params, prefix = ['@url']) => async (ctx, next) => {
     const paramValues = {};
 
     for (let {name, schema, value} of params) {
-        paramValues[name] = validate(schema, value, name);
+        paramValues[name] = validate(schema, value, prefix.concat(name));
     }
 
     ctx.state.params = paramValues;
