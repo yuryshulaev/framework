@@ -1,0 +1,8 @@
+{
+  "name": "framework",
+  "dependencies": {
+    "koa": "^2.1.0",
+    "koa-compose": "^3.2.1",
+    "koa-logger": "^2.0.1"
+  }
+}
