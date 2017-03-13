@@ -1,5 +1,5 @@
 const compose = require('koa-compose');
-const {setState, querySchema} = require('../framework');
+const {setState} = require('../framework');
 const {validate, v} = require('../validate');
 
 module.exports = {
