@@ -1,6 +1,4 @@
-const compose = require('koa-compose');
-const {setState} = require('../framework');
-const {validate, v} = require('../validate');
+const {v} = require('../validate');
 
 module.exports = {
     index: async (ctx, next) => {
@@ -17,7 +15,7 @@ module.exports = {
                 },
                 index: async (ctx, next) => {
                     const {text} = ctx.query;
-                    ctx.body = {pages: {text}};
+                    ctx.body = ctx.state.query;
                     await next();
                 },
             },

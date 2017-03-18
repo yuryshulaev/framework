@@ -70,8 +70,11 @@ const setState = state => async (ctx, next) => {
 };
 
 const querySchema = schema => async (ctx, next) => {
-    ctx.state.originalQuery = ctx.query;
-    ctx.query = validate(schema, ctx.query);
+    if (!ctx.state.query) {
+        ctx.state.query = {};
+    }
+
+    Object.assign(ctx.state.query, validate(schema, ctx.query));
     await next();
 };
 
